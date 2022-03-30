@@ -17,7 +17,10 @@ function addClick (event) {
 
     aniadirProductoAlCarro(itemTitulo, itemPrecio, itemImagen)
 
+    localStorage.setItem('producto', JSON.stringify({itemTitulo, itemPrecio, itemImagen}))
+
 }
+
 function aniadirProductoAlCarro(itemTitulo, itemPrecio, itemImagen) {
     const carrito = document.createElement('div')
     const elementoCarrito = `
@@ -49,7 +52,6 @@ function aniadirProductoAlCarro(itemTitulo, itemPrecio, itemImagen) {
 
     carrito.querySelector('.buttonDelete').addEventListener('click', removerDelCarrito)
 
-    
 
     sumadorCarrito ()
 }
@@ -84,16 +86,15 @@ function removerDelCarrito (event) {
 
 // guardado en localStorage
 
-localStorage.setItem('aniadirProductoAlCarro', JSON.stringify(aniadirProductoAlCarro))
-const productosJSON = localStorage.getItem('aniadirProductoAlCarro')
+function cargarCarrito() {
+   const miProducto = JSON.parse(localStorage.getItem('producto'))
+   aniadirProductoAlCarro(miProducto.itemTitulo, miProducto.itemPrecio, miProducto.itemImagen)
 
+    
+}
 
-// libreria 
-
-const btn = document.querySelectorAll('.addToCart')
-btn .addEventListener('click', () => {
-    swal.fire("Seguro desea agregar al carrito?", {
-        buttons: ["no", true],
-      })
-
-})
+window.onload = function() {
+    cargarCarrito();
+    
+  }
+// debugger;
