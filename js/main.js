@@ -4,7 +4,13 @@ aniadirProducto.forEach((botonAniadir) => {
     botonAniadir.addEventListener('click', addClick)
 })
 
+const comprarButton = document.querySelector('.comprarButton')
+comprarButton.addEventListener('click', comprarButtonClicked)
+
 const carritoDeCompras = document.querySelector('.shoppingCartItemsContainer')
+
+
+// añadir productos
 
 
 function addClick (event) {
@@ -22,7 +28,21 @@ function addClick (event) {
 }
 
 function aniadirProductoAlCarro(itemTitulo, itemPrecio, itemImagen) {
+    
+    const elementsTitle = carritoDeCompras.getElementsByClassName('shoppingCartItemTitle')
+    for (let i = 0; i < elementsTitle.length; i++ ){
+        if (elementsTitle[i].innerText === itemTitulo){ 
+            let elementQuantity = elementsTitle[i].parentElement.parentElement.parentElement.querySelector('.shoppingCartItemQuantity')
+            elementQuantity.value++
+            $('.toast').toast('show')
+            sumadorCarrito ()
+            return
+        }
+    }
+   
+
     const carrito = document.createElement('div')
+
     const elementoCarrito = `
     <div class="row shoppingCartItem">
                     <div class="col-6">
@@ -52,9 +72,15 @@ function aniadirProductoAlCarro(itemTitulo, itemPrecio, itemImagen) {
 
     carrito.querySelector('.buttonDelete').addEventListener('click', removerDelCarrito)
 
-
+    carrito.querySelector('.shoppingCartItemQuantity').addEventListener('change', cambiarCantidades)
     sumadorCarrito ()
+    
 }
+
+
+
+
+// sumador 
 
 function sumadorCarrito () {
     let total = 0
@@ -78,6 +104,9 @@ function sumadorCarrito () {
     shoppingCartTotal.innerHTML = `${total}$`;
 }
 
+
+// remover productos del carro
+
 function removerDelCarrito (event) {
     const buttonClicked = event.target 
     buttonClicked.closest('.shoppingCartItem').remove()
@@ -98,3 +127,18 @@ window.onload = function() {
     
   }
 // debugger;
+
+// ajuste de cantidades
+
+function cambiarCantidades (event) {
+    const input = event.target
+    input.value <= 0 ? input.value = 1 : null
+    sumadorCarrito ()
+}
+
+function comprarButtonClicked () {
+    carritoDeCompras.innerHTML = ''
+    sumadorCarrito ()
+    
+}
+
